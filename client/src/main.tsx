@@ -2,7 +2,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-
+import { fecthCupcakes } from "./services/cupcakeService";
 /* ************************************************************************* */
 
 import App from "./App";
@@ -11,6 +11,7 @@ import CupcakeList from "./pages/CupcakeList";
 import Home from "./pages/Home";
 import Instructions from "./pages/Instructions";
 
+// Define the router with routes and loaders
 const router = createBrowserRouter([
   {
     path: "/",
@@ -27,11 +28,19 @@ const router = createBrowserRouter([
       {
         path: "/cupcakes",
         element: <CupcakeList />,
-        // Step 1: load data here
+        loader: async () => {
+          const cupcakes = await fecthCupcakes(); // Corrected function name
+          return cupcakes;
+        },
       },
     ],
   },
 ]);
+
+// Main application entry point
+export default function MainApp() {
+  return <RouterProvider router={router} />;
+}
 
 /* ************************************************************************* */
 
@@ -44,6 +53,6 @@ if (rootElement == null) {
 // Render the app inside the root element
 createRoot(rootElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <MainApp /> {/* Use the MainApp component */}
   </StrictMode>,
 );
