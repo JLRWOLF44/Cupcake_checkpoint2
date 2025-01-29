@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import Cupcake from "../components/Cupcake";
 
@@ -47,7 +48,11 @@ export default function CupcakeList() {
   console.info("Step 3: Accessories fetched:", accessories);
 
   // Step 5: create filter state
+
+  const [selectedAccessory, setSelectedAccessory] = useState("");
+
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAccessory(event.target.value); // Mettre à jour l'état selectedAccessory
     console.info("Step 5: Filter value selected:", event.target.value);
   };
 
@@ -71,12 +76,16 @@ export default function CupcakeList() {
       </form>
       <ul className="cupcake-list" id="cupcake-list">
         {/* Step 2: Repeat this block for each cupcake */}
-        {cupcakes.map((cupcake) => (
-          <li className="cupcake-item" key={cupcake.id}>
-            {/* Step 5: Filter cupcakes before repeating */}
-            <Cupcake data={cupcake} />
-          </li>
-        ))}
+        {cupcakes
+          .filter((cupcake) =>
+            selectedAccessory ? cupcake.accessory === selectedAccessory : true,
+          )
+          .map((cupcake) => (
+            <li className="cupcake-item" key={cupcake.id}>
+              {/* Step 5: Filter cupcakes before repeating */}
+              <Cupcake data={cupcake} />
+            </li>
+          ))}
         {/* End of block */}
       </ul>
     </>
